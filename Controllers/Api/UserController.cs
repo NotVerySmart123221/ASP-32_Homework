@@ -21,13 +21,11 @@ namespace ASP_32.Controllers.Api
     [Route("api/user")]
     [ApiController]
     public class UserController(
-            DataContext dataContext,
-            DataAccessor dataAccessor,
-            IKdfService kdfService,
-            IConfiguration configuration,
-            IAuthService authService) : ControllerBase
+        DataAccessor dataAccessor,
+        IKdfService kdfService,
+        IConfiguration configuration,
+        IAuthService authService) : ControllerBase
     {
-        private readonly DataContext _dataContext = dataContext;
         private readonly DataAccessor _dataAccessor = dataAccessor;
         private readonly IKdfService _kdfService = kdfService;
         private readonly IAuthService _authService = authService;
@@ -113,60 +111,22 @@ namespace ASP_32.Controllers.Api
             return (login, password);
         }
 
-        /* Д.З. Переробити методи контролера UserController на роботу з DataAccessor
-         * (за потреби створивши відповідні методи у ньому)
-         * Наприкінці роботи прибрати інжекцію DataContext
-         */
         [HttpGet]
         public object Authenticate()
         {
-            String? header = HttpContext.Request.Headers.Authorization;
-            if (header == null)      // Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==
+            try
+            {
+                var (login, password) = GetBasicCredentials();
+
+                var userAccess = _dataAccessor.Authenticate(login, password);
+                _authService.SetAuth(userAccess);
+                return userAccess;
+            }
+            catch (Exception ex)
             {
                 HttpContext.Response.StatusCode = StatusCodes.Status401Unauthorized;
-                return new { Status = "Authorization Header Required" };
+                return new { Status = ex.Message };
             }
-            /* Д.З. Реалізувати повний цикл перевірок даних, що передаються
-             * для автентифікації
-             * - заголовок починається з 'Basic '
-             * - credentials успішно декодуються з Base64
-             * - userPass ділиться на дві частини (може не містити ":")
-             */
-            String credentials =    // 'Basic ' - length = 6
-                header[6..];        // QWxhZGRpbjpvcGVuIHNlc2FtZQ==
-            String userPass =       // Aladdin:open sesame
-                System.Text.Encoding.UTF8.GetString(
-                    Convert.FromBase64String(credentials));
-
-            String[] parts = userPass.Split(':', 2);
-            String login = parts[0];
-            String password = parts[1];
-
-            var userAccess = _dataContext
-                .UserAccesses
-                .AsNoTracking()
-                .Include(ua => ua.User)
-                .Include(ua => ua.Role)
-                .FirstOrDefault(ua => ua.Login == login);
-
-            if (userAccess == null)
-            {
-                HttpContext.Response.StatusCode = StatusCodes.Status401Unauthorized;
-                return new { Status = "Credentials rejected" };
-            }
-            String dk = _kdfService.Dk(password, userAccess.Salt);
-            if(dk != userAccess.Dk)
-            {
-                HttpContext.Response.StatusCode = StatusCodes.Status401Unauthorized;
-                return new { Status = "Credentials rejected." };
-            }
-            // зберігаємо у сесії факт успішної автентифікації
-            // HttpContext.Session.SetString(
-            //     "UserController::Authenticate",
-            //     JsonSerializer.Serialize(userAccess)
-            // );
-            _authService.SetAuth(userAccess);
-            return userAccess;
         }
 
         [HttpPost]

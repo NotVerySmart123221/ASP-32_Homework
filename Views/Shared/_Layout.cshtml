@@ -31,6 +31,12 @@
                     </ul>
                     @if(Context.User.Identity?.IsAuthenticated ?? false)
                     {
+                        String? email = Context.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+                        if (!string.IsNullOrEmpty(email))
+                        {
+                            <a href="mailto:@email"><i class="bi bi-envelope"></i></a>
+                        }
+
                         String name = Context.User.Claims
                             .First(c => c.Type == ClaimTypes.Name)
                             .Value;

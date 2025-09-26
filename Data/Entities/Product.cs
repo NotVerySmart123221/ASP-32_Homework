@@ -1,8 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace ASP_32.Data.Entities
 {
-    public class Product
+    public record Product
     {
         public Guid Id { get; set; }
         public Guid GroupId { get; set; }
@@ -16,6 +17,7 @@ namespace ASP_32.Data.Entities
         public double Price { get; set; }
         public DateTime? DeletedAt { get; set; }
 
+        [JsonIgnore]
         public ProductGroup Group { get; set; } = null!;
     }
 }

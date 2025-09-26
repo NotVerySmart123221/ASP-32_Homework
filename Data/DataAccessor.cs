@@ -43,6 +43,32 @@ namespace ASP_32.Data
             return userAccess;
         }
 
+        public Product? GetProductBySlug(String slug)
+        {
+            var product = _dataContext
+                .Products
+                .AsNoTracking()                
+                .FirstOrDefault(p => (p.Slug == slug || p.Id.ToString() == slug) && p.DeletedAt == null);
+
+            return product == null ? null : product with { ImageUrl = 
+                    $"/Storage/Item/{product.ImageUrl ?? "no-image.jpg"}"};
+        }
+
+        public ProductGroup? GetProductGroupBySlug(String slug)
+        {
+            var group = _dataContext
+                .ProductGroups
+                .Include(g => g.Products.Where(p => p.DeletedAt == null))
+                .AsNoTracking()                
+                .FirstOrDefault(g => g.Slug == slug && g.DeletedAt == null);
+
+            return group == null ? null : group with { Products =                
+                group.Products
+                .Select(p => p with { ImageUrl = 
+                    $"/Storage/Item/{p.ImageUrl ?? "no-image.jpg"}"})
+                .ToList()
+            };
+        }
         public IEnumerable<ProductGroup> GetProductGroups()
         {
             using var context = CreateContext();

@@ -29,6 +29,7 @@ namespace ASP_32.Middleware.Auth
                     new ClaimsIdentity(
                         [
                             new Claim(ClaimTypes.Sid, userAccess.Id.ToString()),
+                            new Claim(ClaimTypes.PrimarySid, userAccess.UserId.ToString()),
                             new Claim(ClaimTypes.Name, userAccess.User.Name),
                             new Claim(ClaimTypes.Role, userAccess.RoleId),
                         ],

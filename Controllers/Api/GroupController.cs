@@ -35,6 +35,24 @@ namespace ASP_32.Controllers.Api
             };
         }
 
+        [HttpGet("{id}")]
+        public RestResponse GroupBySlug(String id)
+        {
+            var pg = _dataAccessor.GetProductGroupBySlug(id);
+            return new()
+            {
+                Status = pg == null ? RestStatus.Status404 : RestStatus.Status200,
+                Meta = new()
+                {
+                    Manipulations = ["GET"],
+                    Cache = 60 * 60,
+                    Service = "Shop API: products of group by slug",
+                    DataType = pg == null ? "null" : "json/object"
+                },
+                Data = pg
+            };
+        }
+
         [HttpPost]
         public object AddGroup(AdminGroupFormModel model)
         {

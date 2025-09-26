@@ -46,7 +46,7 @@ namespace ASP_32.Middleware.Auth
                             context.User = new ClaimsPrincipal(
                                 new ClaimsIdentity(
                                     [
-                                        new Claim(ClaimTypes.Sid,  data.GetString("sub")! ),
+                                        new Claim(ClaimTypes.PrimarySid,  data.GetString("sub")! ),
                                         new Claim(ClaimTypes.Name, data.GetString("name")!),
                                         new Claim(ClaimTypes.Role, data.GetString("aud")! ),
                                     ],

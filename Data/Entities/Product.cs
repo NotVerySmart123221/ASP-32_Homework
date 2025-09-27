@@ -19,5 +19,9 @@ namespace ASP_32.Data.Entities
 
         [JsonIgnore]
         public ProductGroup Group { get; set; } = null!;
+
+        public ICollection<Feedback> Feedbacks { get; set; }
+
+        public int FeedbackCount { get; set; }
     }
 }

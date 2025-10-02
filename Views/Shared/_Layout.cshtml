@@ -29,19 +29,21 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
                     </ul>
-                    @if(Context.User.Identity?.IsAuthenticated ?? false)
+                    @if (Context.User.Identity?.IsAuthenticated ?? false)
                     {
                         String name = Context.User.Claims
-                            .First(c => c.Type == ClaimTypes.Name)
-                            .Value;
+                        .First(c => c.Type == ClaimTypes.Name)
+                        .Value;
                         bool isAdmin = Context.User.Claims
-                            .FirstOrDefault(c => c.Type == ClaimTypes.Role)
-                            ?.Value == "Admin";
+                        .FirstOrDefault(c => c.Type == ClaimTypes.Role)
+                        ?.Value == "Admin";
+                        string email = Context.User.Claims.First(e => e.Type == ClaimTypes.Email)?.Value;
 
                         <div>
-                            @if(isAdmin)
+                            @if (isAdmin)
                             {
                                 <a asp-action="Admin"><i class="bi bi-speedometer2"></i></a>
+
                             }
                             <b title="@name">@(name.ToUpper()[0])</b>
 

@@ -51,25 +51,22 @@
         <div class="row">
             <div class="col">
                 <div class="input-group mb-3">
-                    <span class="input-group-text" id="product-name-addon"><i class="bi bi-bag-check"></i></span>
-                    <input name="product-name" type="text" class="form-control" placeholder="Назва"
-                           aria-label="Назва" aria-describedby="product-name-addon">
+                    <span class="input-group-text"><i class="bi bi-bag-check"></i></span>
+                    <input name="product-name" type="text" class="form-control" placeholder="Назва" required>
                 </div>
             </div>
             <div class="col">
                 <div class="input-group mb-3">
-                    <span class="input-group-text" id="product-description-addon"><i class="bi bi-card-text"></i></span>
-                    <input name="product-description" type="text" class="form-control" placeholder="Опис"
-                           aria-label="Опис" aria-describedby="product-description-addon">
+                    <span class="input-group-text"><i class="bi bi-card-text"></i></span>
+                    <input name="product-description" type="text" class="form-control" placeholder="Опис" required>
                 </div>
             </div>
         </div>
         <div class="row">
             <div class="col">
                 <div class="input-group mb-3">
-                    <span class="input-group-text" id="product-slug-addon"><i class="bi bi-link"></i></span>
-                    <input name="product-slug" type="text" class="form-control" placeholder="Посилання"
-                           aria-label="Посилання" aria-describedby="product-slug-addon">
+                    <span class="input-group-text"><i class="bi bi-link"></i></span>
+                    <input name="product-slug" type="text" class="form-control" placeholder="Посилання" required>
                 </div>
             </div>
             <div class="col">
@@ -82,16 +79,14 @@
         <div class="row">
             <div class="col">
                 <div class="input-group mb-3">
-                    <span class="input-group-text" id="product-price-addon"><i class="bi bi-currency-exchange"></i></span>
-                    <input name="product-price" type="number" min="0" step="0.01" class="form-control" placeholder="Ціна"
-                           aria-label="Ціна" aria-describedby="product-price-addon">
+                    <span class="input-group-text"><i class="bi bi-currency-exchange"></i></span>
+                    <input name="product-price" type="number" min="0.01" step="0.01" class="form-control" placeholder="Ціна" required>
                 </div>
             </div>
             <div class="col">
                 <div class="input-group mb-3">
-                    <span class="input-group-text" id="product-stock-addon"><i class="bi bi-database"></i></span>
-                    <input name="product-stock" type="number" min="1" step="1" class="form-control" placeholder="Кількість"
-                           aria-label="Кількість" aria-describedby="product-stock-addon">
+                    <span class="input-group-text"><i class="bi bi-database"></i></span>
+                    <input name="product-stock" type="number" min="1" step="1" class="form-control" placeholder="Кількість" required>
                 </div>
             </div>
         </div>
@@ -99,8 +94,8 @@
             <div class="col">
                 <div class="input-group mb-3">
                     <label class="input-group-text" for="product-group-id"><i class="bi bi-list-ol"></i></label>
-                    <select name="product-group-id" class="form-select" id="product-group-id">
-                        @foreach(var grp in Model.ProductGroups)
+                    <select name="product-group-id" class="form-select" id="product-group-id" required>
+                        @foreach (var grp in Model.ProductGroups)
                         {
                             <option value="@grp.Id">@grp.Name</option>
                         }
@@ -109,7 +104,7 @@
             </div>
             <div class="col"><button type="submit" class="btn btn-outline-primary">Додати</button></div>
         </div>
-        
     </form>
+
 
 </div>

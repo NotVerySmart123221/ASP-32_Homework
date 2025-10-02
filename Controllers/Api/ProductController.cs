@@ -67,26 +67,23 @@ namespace ASP_32.Controllers.Api
         [HttpPost]
         public object AddProduct(ApiProductFormModel model)
         {
-            #region Валідація моделі
-            Guid groupGuid;
-            try { groupGuid = Guid.Parse(model.GroupId); }
-            catch { return new { status = "Invalid GroupId", code = 400 }; }
-            #endregion
+            if (!Guid.TryParse(model.GroupId, out var groupGuid))
+                return new { status = "Invalid GroupId", code = 400 };
 
-            _dataContext
-                .Products
-                .Add(new()
-                {
-                    Id = Guid.NewGuid(),
-                    GroupId = groupGuid,
-                    Name = model.Name,
-                    Description = model.Description,
-                    Slug = model.Slug,
-                    Price = model.Price,
-                    Stock = model.Stock,
-                    ImageUrl = model.Image == null ? null :
-                        _storageService.Save(model.Image),
-                });
+            if (_dataContext.Products.Any(p => p.Slug == model.Slug))
+                return new { status = "Такий slug вже існує", code = 400 };
+
+            _dataContext.Products.Add(new Product
+            {
+                Id = Guid.NewGuid(),
+                GroupId = groupGuid,
+                Name = model.Name,
+                Description = model.Description,
+                Slug = model.Slug,
+                Price = model.Price,
+                Stock = model.Stock,
+                ImageUrl = model.Image == null ? null : _storageService.Save(model.Image),
+            });
 
             try
             {
@@ -98,9 +95,7 @@ namespace ASP_32.Controllers.Api
                 return new { status = ex.Message, code = 500 };
             }
         }
+
     }
 }
-/* Д.З. Реалізувати валідацію моделі Product (ApiProductFormModel)
- * - засобами фронтенду (JS перед надсиланням)
- * - засобами ASP при прийомі даних
- */
+

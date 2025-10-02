@@ -23,7 +23,8 @@ namespace ASP_32.Controllers.Api
         [HttpPost("feedback/{id}")]
         public RestResponse AddFeedback(String id, int? rate, String? comment)
         {
-            RestResponse restResponse = new(){
+            RestResponse restResponse = new()
+            {
                 Meta = new()
                 {
                     Manipulations = ["POST"],
@@ -31,38 +32,34 @@ namespace ASP_32.Controllers.Api
                     Service = "Shop API: product feedback",
                     DataType = "null",
                     Opt = {
-                         { "id", id },
-                         { "rate", rate ?? -1 },
-                         { "comment", comment ?? "" },
-                    },
+                 { "id", id },
+                 { "rate", rate ?? -1 },
+                 { "comment", comment ?? "" },
+            },
                 },
                 Data = null
             };
+
             Guid? userId = null;
-            if(HttpContext.User.Identity?.IsAuthenticated ?? false)
+            if (HttpContext.User.Identity?.IsAuthenticated ?? false)
             {
                 userId = Guid.Parse(HttpContext.User.Claims
                     .First(c => c.Type == ClaimTypes.PrimarySid)
                     .Value);
             }
+
             var product = _dataAccessor.GetProductBySlug(id);
             if (product == null)
             {
                 restResponse.Status = RestStatus.Status404;
                 return restResponse;
             }
-            _dataContext.Feedbacks.Add(new()
-            {
-                Id = Guid.NewGuid(),
-                ProductId = product.Id,
-                UserId = userId,
-                Comment = comment,
-                Rate = rate,
-                CreatedAt = DateTime.Now,
-            });
-            _dataContext.SaveChanges();
+
+            bool ok = _dataAccessor.AddFeedback(product, userId, rate, comment);
+            restResponse.Status = ok ? RestStatus.Status200 : RestStatus.Status500;
             return restResponse;
         }
+
 
         [HttpPost]
         public object AddProduct(ApiProductFormModel model)
@@ -77,7 +74,7 @@ namespace ASP_32.Controllers.Api
             {
                 Id = Guid.NewGuid(),
                 GroupId = groupGuid,
-                Name = model.Name,
+                Name = model.Name,  
                 Description = model.Description,
                 Slug = model.Slug,
                 Price = model.Price,

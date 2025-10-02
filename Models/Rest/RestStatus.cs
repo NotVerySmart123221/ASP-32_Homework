@@ -10,5 +10,6 @@
         public static readonly RestStatus Status400 = new() { IsOk = false, Code = 400, Phrase = "Bad Request" };
         public static readonly RestStatus Status401 = new() { IsOk = false, Code = 401, Phrase = "UnAuthorized" };
         public static readonly RestStatus Status404 = new() { IsOk = false, Code = 404, Phrase = "Not Found" };
+        public static readonly RestStatus Status500 = new() { IsOk = false, Code = 500, Phrase = "Server error" };
     }
 }

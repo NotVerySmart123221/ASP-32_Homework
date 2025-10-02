@@ -39,14 +39,12 @@ namespace ASP_32.Controllers.Api
                 Data = null
             };
             Guid? userId = null;
-            // Визначаємо, чи є авторизований користувач
             if(HttpContext.User.Identity?.IsAuthenticated ?? false)
             {
                 userId = Guid.Parse(HttpContext.User.Claims
                     .First(c => c.Type == ClaimTypes.PrimarySid)
                     .Value);
             }
-            // Перевіряємо чи є товар з переданим id (id OR slug)
             var product = _dataAccessor.GetProductBySlug(id);
             if (product == null)
             {
@@ -65,9 +63,6 @@ namespace ASP_32.Controllers.Api
             _dataContext.SaveChanges();
             return restResponse;
         }
-        /* Д.З. Переробити ProductController::AddFeedback на роботу з 
-         * DataAccessor замість DataContext (створивши відповідні методи)
-         */
 
         [HttpPost]
         public object AddProduct(ApiProductFormModel model)

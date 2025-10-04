@@ -1,2 +1,2 @@
-[HM](images/dfhdfhgfhgf.png)
-[HM](images/wororooror.png)
+[HM](images/fdghjuyrtd.jpg)
+[HM](images/fgnhfukyftjhdgfvc.jpg)

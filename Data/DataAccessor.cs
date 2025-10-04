@@ -39,7 +39,6 @@ namespace ASP_32.Data
             return true;
         }
 
-
         public bool DeleteCartItem(string userId, string ciId)
         {
             Guid ciGuid = Guid.Parse(ciId);
@@ -77,12 +76,6 @@ namespace ASP_32.Data
             Guid userGuid = Guid.Parse(userId);
             Guid productGuid = Guid.Parse(productId);
 
-            // Перевіряємо чи достатньо товару у наявності
-            // Перевіряємо чи користувач має відкритий кошик
-            // Якщо не має, то відкриваємо новий
-            // Перевіряємо чи є у кошику даний товар
-            // якщо ні, то створюємо нову позицію
-            // якщо є, то збільшуємо кількість у наявній позиції
             Cart? cart = GetActiveCart(userId);
             if (cart == null)
             {
@@ -114,7 +107,6 @@ namespace ASP_32.Data
             {
                 cartItem.Quantity += 1;
             }
-            // Перераховуємо ціну кошику
             CalcPrice(cart);
 
             _dataContext.SaveChanges();
@@ -125,11 +117,9 @@ namespace ASP_32.Data
             double total = 0.0;
             foreach (CartItem cartItem in cart.CartItems)
             {
-                // if(cartItem.DiscountId != null) ...
                 cartItem.Price = cartItem.Product.Price * cartItem.Quantity;
                 total += cartItem.Price;
             }
-            // if(cart.DiscountId != null) ...
             cart.Price = total;
         }
 
@@ -144,7 +134,6 @@ namespace ASP_32.Data
                     c.PaidAt == null &&
                     c.DeletedAt == null);
         }
-
 
         public UserAccess? Authenticate(String login, String password)
         {

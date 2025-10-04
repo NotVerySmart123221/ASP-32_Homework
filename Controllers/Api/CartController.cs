@@ -151,7 +151,7 @@ namespace ASP_32.Controllers.Api
             {
                 _dataAccessor.ClearCart(userId);
                 response.Status = RestStatus.Status200;
-                response.Data = "Cart cleared";
+                response.Data = "Cart purchased";
             }, response);
 
             return response;

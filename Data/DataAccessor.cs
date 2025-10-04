@@ -27,6 +27,18 @@ namespace ASP_32.Data
             _dataContext.SaveChanges();
             return true;
         }
+        public bool ClearCart(string userId)
+        {
+            var cart = GetActiveCart(userId);
+            if (cart == null) return false;
+
+            foreach (var item in cart.CartItems.ToList())
+            {
+                DeleteCartItem(userId, item.Id.ToString());
+            }
+            return true;
+        }
+
 
         public bool DeleteCartItem(string userId, string ciId)
         {

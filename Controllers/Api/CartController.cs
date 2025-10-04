@@ -121,6 +121,42 @@ namespace ASP_32.Controllers.Api
             return response;
         }
 
+        [HttpDelete("clear")]
+        public RestResponse ClearCart()
+        {
+            var response = new RestResponse
+            {
+                Meta = new() { Service = "Shop API 'User cart'. Clear Cart", ServerTime = DateTime.Now.Ticks }
+            };
+
+            ExecuteAuthorized(userId =>
+            {
+                _dataAccessor.ClearCart(userId);
+                response.Status = RestStatus.Status200;
+                response.Data = "Cart cleared";
+            }, response);
+
+            return response;
+        }
+
+        [HttpDelete("buy")]
+        public RestResponse BuyCart()
+        {
+            var response = new RestResponse
+            {
+                Meta = new() { Service = "Shop API 'User cart'. Clear Cart", ServerTime = DateTime.Now.Ticks }
+            };
+
+            ExecuteAuthorized(userId =>
+            {
+                _dataAccessor.ClearCart(userId);
+                response.Status = RestStatus.Status200;
+                response.Data = "Cart cleared";
+            }, response);
+
+            return response;
+        }
+
         private void ExecuteAuthorized(Action<string> action, RestResponse response)
         {
             if (HttpContext.User.Identity?.IsAuthenticated ?? false)
